@@ -22,6 +22,13 @@ const (
 	sourcegraphCryptEnvvar      = "SOURCEGRAPH_CRYPT_KEY"
 )
 
+// ConfiguredToEncrypt can be used to determine from outside the package whether
+// encryption is specifically set up. This allows for packages to control their own use of
+// encryption as needed.
+func ConfiguredToEncrypt() bool {
+	return configuredToEncrypt
+}
+
 // gatherKeys splits the encryption string into its potential two components
 func gatherKeys(data []byte) (oldKey, newKey []byte) {
 	parts := bytes.Split(data, []byte(","))
