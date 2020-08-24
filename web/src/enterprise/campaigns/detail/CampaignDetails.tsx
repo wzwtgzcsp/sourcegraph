@@ -25,11 +25,14 @@ import { CampaignStatsCard } from './CampaignStatsCard'
 import { CampaignHeader } from './CampaignHeader'
 import { CampaignTabs } from './CampaignTabs'
 import { CampaignDetailsActionSection } from './CampaignDetailsActionSection'
+import { Breadcrumbs, BreadcrumbsProps, BreadcrumbSetters } from '../../../components/Breadcrumbs'
 
 export interface CampaignDetailsProps
     extends ThemeProps,
         ExtensionsControllerProps,
         PlatformContextProps,
+        BreadcrumbsProps,
+        BreadcrumbSetters,
         TelemetryProps {
     /**
      * The campaign ID.
@@ -61,6 +64,8 @@ export const CampaignDetails: React.FunctionComponent<CampaignDetailsProps> = ({
     extensionsController,
     platformContext,
     telemetryService,
+    useBreadcrumb,
+    breadcrumbs,
     fetchCampaignById = _fetchCampaignById,
     queryChangesets,
     queryExternalChangesetWithFileDiffs,
@@ -101,6 +106,7 @@ export const CampaignDetails: React.FunctionComponent<CampaignDetailsProps> = ({
     return (
         <>
             <PageTitle title={campaign.name} />
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
             <CampaignHeader
                 name={campaign.name}
                 namespace={campaign.namespace}
