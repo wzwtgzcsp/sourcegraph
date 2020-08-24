@@ -438,6 +438,7 @@ Referenced by:
     TABLE "external_service_repos" CONSTRAINT "external_service_repos_external_service_id_fkey" FOREIGN KEY (external_service_id) REFERENCES external_services(id) ON DELETE CASCADE DEFERRABLE
 Triggers:
     trig_delete_external_service_ref_on_external_service_repos AFTER UPDATE OF deleted_at ON external_services FOR EACH ROW EXECUTE PROCEDURE delete_external_service_ref_on_external_service_repos()
+    trig_soft_delete_orphan_repos_for_external_service AFTER DELETE OR UPDATE OF deleted_at ON external_services FOR EACH ROW EXECUTE PROCEDURE soft_delete_orphan_repos()
 
 ```
 
