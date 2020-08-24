@@ -7,7 +7,7 @@ CREATE FUNCTION soft_delete_orphan_repos() RETURNS trigger
 AS $$
 BEGIN
     -- If a user is soft-deleted, delete every row that references that user
-    IF (OLD.deleted_at IS NULL AND NEW.deleted_at IS NOT NULL) THEN
+    IF (OLD.deleted_at IS NULL AND (NEW IS NULL OR NEW.deleted_at IS NOT NULL)) THEN
         UPDATE
             repo
         SET
