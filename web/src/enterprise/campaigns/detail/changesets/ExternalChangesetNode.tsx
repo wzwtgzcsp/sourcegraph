@@ -9,7 +9,7 @@ import * as H from 'history'
 import React, { useState, useCallback } from 'react'
 import { DiffStat } from '../../../../components/diff/DiffStat'
 import { queryExternalChangesetWithFileDiffs as _queryExternalChangesetWithFileDiffs } from '../backend'
-import { ExternalChangesetFields } from '../../../../graphql-operations'
+import { ExternalChangesetFields, GitCommitFields } from '../../../../graphql-operations'
 import ChevronRightIcon from 'mdi-react/ChevronRightIcon'
 import ChevronDownIcon from 'mdi-react/ChevronDownIcon'
 import { ChangesetStatusCell } from './ChangesetStatusCell'
@@ -18,6 +18,7 @@ import { ChangesetReviewStatusCell } from './ChangesetReviewStatusCell'
 import { ErrorAlert } from '../../../../components/alerts'
 import { ChangesetFileDiff } from './ChangesetFileDiff'
 import { ExternalChangesetInfoCell } from './ExternalChangesetInfoCell'
+import { GitCommitNode } from '../../../../repo/commits/GitCommitNode'
 
 export interface ExternalChangesetNodeProps extends ThemeProps {
     node: ExternalChangesetFields
@@ -51,6 +52,8 @@ export const ExternalChangesetNode: React.FunctionComponent<ExternalChangesetNod
         [isExpanded]
     )
 
+    const [commits, setCommits] = useState<GitCommitFields[]>()
+
     return (
         <>
             <button
@@ -77,8 +80,15 @@ export const ExternalChangesetNode: React.FunctionComponent<ExternalChangesetNod
                 {node.diffStat && <DiffStat {...node.diffStat} expandedCounts={true} />}
             </div>
             {isExpanded && (
-                <div className="external-changeset-node__expanded-section">
+                <div className="external-changeset-node__expanded-section bg-gray">
                     {node.error && <ErrorAlert error={node.error} history={history} />}
+                    <ul className="list-group px-5 mb-3">
+                        {commits?.map(commit => (
+                            <li className="list-group-item bg-white" key={commit.oid}>
+                                <GitCommitNode node={commit} compact={true} />
+                            </li>
+                        ))}
+                    </ul>
                     <ChangesetFileDiff
                         changesetID={node.id}
                         isLightTheme={isLightTheme}
@@ -87,6 +97,7 @@ export const ExternalChangesetNode: React.FunctionComponent<ExternalChangesetNod
                         repositoryID={node.repository.id}
                         repositoryName={node.repository.name}
                         extensionInfo={extensionInfo}
+                        setCommits={setCommits}
                         queryExternalChangesetWithFileDiffs={queryExternalChangesetWithFileDiffs}
                     />
                 </div>
