@@ -64,7 +64,7 @@ export const CampaignDetailsPage: React.FunctionComponent<CampaignDetailsPagePro
     extensionsController,
     platformContext,
     telemetryService,
-    setBreadcrumb,
+    useBreadcrumb,
     fetchCampaignById = _fetchCampaignById,
     queryChangesets,
     queryExternalChangesetWithFileDiffs,
@@ -89,16 +89,18 @@ export const CampaignDetailsPage: React.FunctionComponent<CampaignDetailsPagePro
         )
     )
 
-    useEffect(() => {
-        if (campaign) {
-            const subscription = setBreadcrumb({
-                element: <>{campaign.name}</>,
-                key: 'CampaignDetailsPage',
-            })
-            return () => subscription.unsubscribe()
-        }
-        return () => undefined
-    }, [campaign, setBreadcrumb])
+    useBreadcrumb(
+        useMemo(
+            () =>
+                campaign
+                    ? {
+                          element: <>{campaign.name}</>,
+                          key: 'CampaignDetailsPage',
+                      }
+                    : null,
+            [campaign]
+        )
+    )
 
     // Is loading.
     if (campaign === undefined) {
