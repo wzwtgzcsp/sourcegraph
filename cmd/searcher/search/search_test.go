@@ -189,6 +189,33 @@ main.go:7:}
 		}, `
 file++.plus:1:filename contains regex metachars
 `},
+
+		{protocol.PatternInfo{Pattern: "World", PatternNegated: true}, `
+abc.txt
+file++.plus
+milton.png
+`},
+
+		{protocol.PatternInfo{Pattern: "World", IsCaseSensitive: true, PatternNegated: true}, `
+abc.txt
+file++.plus
+main.go
+milton.png
+`},
+
+		{protocol.PatternInfo{Pattern: "fmt", PatternNegated: true}, `
+README.md
+abc.txt
+file++.plus
+milton.png
+`},
+
+		{protocol.PatternInfo{Pattern: "fmt.Println(:[body])", PatternNegated: true, IsStructuralPat: true}, `
+README.md
+abc.txt
+file++.plus
+milton.png
+`},
 	}
 
 	store, cleanup, err := newStore(files)
@@ -391,6 +418,9 @@ func doSearch(u string, p *protocol.Request) ([]protocol.FileMatch, error) {
 	}
 	if p.PatternMatchesPath {
 		form.Set("PatternMatchesPath", "true")
+	}
+	if p.PatternNegated {
+		form.Set("PatternNegated", "true")
 	}
 	resp, err := http.PostForm(u, form)
 	if err != nil {
