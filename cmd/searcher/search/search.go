@@ -234,29 +234,30 @@ func (s *Service) search(ctx context.Context, p *protocol.Request) (matches []pr
 
 	if p.IsStructuralPat {
 		matches, limitHit, err = structuralSearch(ctx, zipPath, p.Pattern, p.CombyRule, p.Languages, p.IncludePatterns, p.Repo)
-
 		if p.PatternNegated {
-			noMatches := make([]protocol.FileMatch, len(zf.Files))
-			setOfMatchedFiles := map[string]struct{}{}
-			for _, match := range matches {
-				setOfMatchedFiles[match.Path] = struct{}{}
-			}
-			i := 0
-			for _, file := range zf.Files {
-				if _, ok := setOfMatchedFiles[file.Name]; ok {
-					continue
-				}
-				noMatches[i] = protocol.FileMatch{Path: file.Name}
-				i++
-			}
-			return noMatches[:i], limitHit, false, err
+			matches = invertFileMatches(zf.Files, matches)
 		}
-
 	} else {
 		matches, limitHit, err = regexSearch(ctx, rg, zf, p.FileMatchLimit, p.PatternMatchesContent, p.PatternMatchesPath, p.PatternNegated)
 	}
-
 	return matches, limitHit, false, err
+}
+
+func invertFileMatches(files []store.SrcFile, matches []protocol.FileMatch) []protocol.FileMatch {
+	setOfMatchedFiles := make(map[string]struct{}, len(matches))
+	noMatches := make([]protocol.FileMatch, len(files))
+	for _, match := range matches {
+		setOfMatchedFiles[match.Path] = struct{}{}
+	}
+	i := 0
+	for _, file := range files {
+		if _, ok := setOfMatchedFiles[file.Name]; ok {
+			continue
+		}
+		noMatches[i] = protocol.FileMatch{Path: file.Name}
+		i++
+	}
+	return noMatches[:i]
 }
 
 func validateParams(p *protocol.Request) error {
