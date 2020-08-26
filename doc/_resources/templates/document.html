@@ -17,11 +17,11 @@
 			<nav id="breadcrumbs" class="breadcrumbs">
 				{{range $index, $e := .Breadcrumbs}}
 					<a href="{{$e.URL}}" class="{{if $e.IsActive}}active{{end}}">
-						{{if eq $index 0}}
+						{{- if eq $index 0 -}}
 							Home
-						{{else}}
+						{{- else -}}
 							{{$e.Label}}
-						{{end}}
+						{{- end -}}
 					</a> {{if not $e.IsActive}}/{{end}}
 				{{end}}
 			</nav>

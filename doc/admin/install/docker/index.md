@@ -70,7 +70,7 @@ To test new development builds of Sourcegraph (triggered by commits to master), 
 
 > WARNING: `insiders` builds may be unstable, so back up Sourcegraph's data and config (usually `~/.sourcegraph`) beforehand.
 
-```
+```bash
 docker run --publish 7080:7080 --rm --volume ~/.sourcegraph/config:/etc/sourcegraph --volume ~/.sourcegraph/data:/var/opt/sourcegraph sourcegraph/server:insiders
 ```
 

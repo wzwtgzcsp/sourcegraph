@@ -30,19 +30,19 @@
 			<header id="header">
 				<div class="container">
 					<h1 id="logo"><a href="/"><img src="{{asset "sourcegraph-logo-docs.svg"}}" alt="Sourcegraph docs"></a></h1>
-                    {{block "versionSelector" .}}{{end}}
-                    <nav class="links">
-                        <ul>
-                            <li><a href="https://about.sourcegraph.com">About</a></li>
-                            <li><a href="https://github.com/sourcegraph/sourcegraph">Code</a></li>
-                            <li><a href="https://sourcegraph.com">Sourcegraph.com</a></li>
-                        </ul>
-                    </nav>
-					<form id="search-form" method="get" action="/search">
+                    <form id="search-form" method="get" action="/search">
 						<input type="text" id="search" name="q" value="{{block "query" .}}{{end}}" placeholder="" spellcheck="false" aria-label="Query" />
                         <input type="hidden" name="v" value="{{block "version" .}}{{end}}">
 						<button id="search-button" type="submit" aria-label="Search">Search</button>
 					</form>
+                    {{block "versionSelector" .}}{{end}}
+                    <div style="flex:1"></div>
+                    <nav class="links">
+                        <ul>
+                            <li><a href="https://about.sourcegraph.com">About</a></li>
+                            <li><a href="https://sourcegraph.com">Sourcegraph.com</a></li>
+                        </ul>
+                    </nav>
 				</div>
 			</header>
 
@@ -52,17 +52,18 @@
 				</div>
 			</div>
 
-            <footer class="footer pt-6 pb-2">
-                <div class="footer__postscript d-flex justify-content-between pt-4 pb-2 small">
-                    <ul class="nav">
-                        <li class="nav-item text-muted mt-2 mr-3">© 2020 Sourcegraph</li>
-                        <li class="nav-item"><a class="nav-link" href="https://about.sourcegraph.com/terms">Terms</a>
-                        </li>
-                        <li class="nav-item"><a class="nav-link"
-                                                 href="https://about.sourcegraph.com/security">Security</a></li>
-                        <li class="nav-item"><a class="nav-link"
-                                                 href="https://about.sourcegraph.com/privacy">Privacy</a></li>
-                    </ul>
+            <footer>
+                <div class="container">
+                    <nav class="links">
+                        <ul>
+                            <li><a href="https://about.sourcegraph.com">About Sourcegraph</a></li>
+                            <li><a href="https://sourcegraph.com">Sourcegraph.com</a></li>
+                            <li><a href="https://github.com/sourcegraph/sourcegraph">Code (GitHub)</a></li>
+                            <li><a href="https://about.sourcegraph.com/terms">Terms</a></li>
+                            <li><a href="https://about.sourcegraph.com/security">Security</a></li>
+                            <li><a href="https://about.sourcegraph.com/privacy">Privacy</a></li>
+                        </ul>
+                    </nav>
                 </div>
             </footer>
 
@@ -79,7 +80,7 @@
 {{end}}
 
 {{define "versionSelector"}}
-    <div id="version-selector" class="dropdown version-dropdown ml-2">
+    <div id="version-selector" class="dropdown version-dropdown ml-2" style="display:none"><!-- TODO(sqs) -->
         {{/* Update these after each release. */}} {{$previousReleaseRevspec := "v3.18.0"}} {{$previousReleaseVersion := "3.18"}} {{$currentReleaseRevspec := "v3.19.1"}} {{$currentReleaseVersion := "3.19"}} {{$nextReleaseVersion := "main"}}
         <button class="btn btn-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{.ContentVersion}}{{/* If no version is specified we are on the currentReleaseVersion */}}{{if eq .ContentVersion ""}}{{$currentReleaseVersion}}{{end}}
