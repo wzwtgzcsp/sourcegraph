@@ -592,3 +592,16 @@ func concatRevFilters(nodes []Node) []Node {
 		return Parameter{Value: value, Field: FieldRepo, Negated: negated}
 	})
 }
+
+var ellipses = lazyregexp.New(`\.\.\.`)
+
+// ellipsesForHoles substitutes ellipses ... for :[_] holes in structural search queries.
+func ellipsesForHoles(nodes []Node) []Node {
+	return MapPattern(nodes, func(value string, negated bool, annotation Annotation) Node {
+		return Pattern{
+			Value:      ellipses.ReplaceAllLiteralString(value, ":[_]"),
+			Negated:    negated,
+			Annotation: annotation,
+		}
+	})
+}
